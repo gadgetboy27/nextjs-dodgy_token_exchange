@@ -1,0 +1,27 @@
+{
+  "name": "express-crash-course",
+  "version": "1.0.0",
+  "description": "learning express frameworks",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "express-crash-course"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "Henry Peti",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "expresss": "0.0.0",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
