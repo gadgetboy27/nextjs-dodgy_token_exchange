@@ -1,7 +1,12 @@
 const terms = [{
-  first: 'Coffee & chat',
-  second: 'Dinner and a movie',
-  third: 'Netflix and chill'
-}]
+  'id': 1,
+  'term': 'Coffee & chat' },
+{
+  'id': 2,
+  'term': 'Dinner and a movie' },
+{
+  'id': 3,
+  'term': 'Netflix and chill' }
+]
 
 module.exports = terms
