@@ -2,7 +2,8 @@ const express = require('express')
 const path = require('path')
 const exphbs = require('express-handlebars')
 // const logger = require('./middleware/logger')
-const terms = require('./Terms')
+const terms = require('./terms')
+// const bodyParser = require('bodyParser')
 
 const app = express()
 
@@ -24,6 +25,15 @@ app.get('/', (req, res) =>
     terms
   })
 )
+
+// app.post('./send-email', function (req, res) {
+//   console.log('Posted from app page')
+//   // Setting up email send from radio btn choice
+//   const transporter = nodemailer.createTransport({
+//     service: 'Gmail',
+
+//   })
+// })
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))

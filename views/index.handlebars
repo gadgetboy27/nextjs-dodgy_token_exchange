@@ -1,7 +1,19 @@
 <h1 class='text mb-3'>{{title}}</h1>
-<h4>Chooose one or more</h4>
+<h4>Choose one  😀</h4>
 <ul class='list-group'>
     {{#each terms}}
-    <li class='list-group-item'>{{term}}</li>
+    <label><input type="radio" name="mode" value="off"> {{term}}</label><br>
     {{/each}}
 </ul>
+<form id='submit-form'>
+    <button class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+document.getElementById("submit-form").addEventListener(
+    'submit', function(e){
+  e.preventDefault()
+  alert('submit-form')
+  return false
+})
+</script>
