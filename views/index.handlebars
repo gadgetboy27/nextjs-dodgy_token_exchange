@@ -1,11 +1,11 @@
 <h1 class='text mb-3'>{{title}}</h1>
-<h4>Choose one  😀</h4>
+<h4>Pick one  😀</h4>
 <script>
     function submitForm() {
        const checked = document.forms['submit-form'].submit()
     }
 </script>
-<form id='submit-form'>
+<form method='POST' action='send' id='submit-form'>
 <ul class='list-group'>
     <label><input type="radio" name="term" value="off"> Coffee and a chat</label><br>
     <label><input type="radio" name="term" value="off"> Dinner and a movie</label><br>
@@ -13,7 +13,8 @@
     <label><input type="radio" name="term" value="off"> Random adventure</label><br>
 
 </ul>
-    <button class="btn btn-primary">Submit</button>
+    <button type='submit' class="btn btn-primary">Submit</button>
+    {{msg}}
 </form>
 
 <script>

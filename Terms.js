@@ -1,5 +1,5 @@
 const terms = [{
-  'id': 1,
+  'id': 'coffee',
   'term': 'Coffee & chat' },
 {
   'id': 2,

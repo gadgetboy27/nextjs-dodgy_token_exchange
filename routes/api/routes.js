@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const terms = require('../../Terms')
+const terms = require('../../terms')
 
 // Gets terms
 router.get('/', (req, res) => res.json(terms))

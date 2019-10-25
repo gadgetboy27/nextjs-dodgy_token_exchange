@@ -26,19 +26,19 @@ app.get('/', (req, res) =>
   })
 )
 
-// app.post('./send-email', function (req, res) {
-//   console.log('Posted from app page')
-//   // Setting up email send from radio btn choice
-//   const transporter = nodemailer.createTransport({
-//     service: 'Gmail',
+app.post('/send', (req, res) => {
+  console.log(req.body.params)
+  //   // Setting up email send from radio btn choice
+  //   const transporter = nodemailer.createTransport({
+  //     service: 'Gmail',
 
 //   })
-// })
+})
 
 // Set static folder
-app.use(express.static(path.join(__dirname, 'public')))
+app.use('/public', express.static(path.join(__dirname, 'public')))
 
-app.use('/api/terms', require('./routes/api/terms'))
+app.use('/api/routes', require('./routes/api/routes'))
 
 const PORT = process.env.PORT || 3000
 
