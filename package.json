@@ -1,28 +1,20 @@
 {
   "name": "express-crash-course",
-  "version": "1.0.0",
-  "description": "learning express frameworks",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "express-crash-course"
-  },
-  "keywords": [
-    "express"
-  ],
-  "author": "Henry Peti",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "express-handlebars": "^3.1.0",
-    "expresss": "0.0.0",
-    "moment": "^2.24.0"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.4"
+    "@uniswap/sdk-core": "^4.0.6",
+    "@uniswap/v3-sdk": "^3.10.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.7.0",
+    "next": "13.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }
