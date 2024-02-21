@@ -13,7 +13,8 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="/MemeCoinList">Next.Dodgy Token App</a>
+          Welcome to <a href="/coinExchange">
+            Dodgy Token Exchange</a>
         </h1>
 
         <p className={styles.description}>
