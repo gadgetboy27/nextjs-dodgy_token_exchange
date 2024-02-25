@@ -18,7 +18,6 @@ export default async function handler(req, res) {
 
     const result = await response.json();
     console.log(result)
-    
     // Extract relevant data and send it as JSON response
     const coinsData = result.data.coins.map((coin) => ({
       name: coin.name,

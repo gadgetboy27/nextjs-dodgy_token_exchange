@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
+import { calculateTotal } from './api/api'; // Import the calculateTotal function
 
 const AltCoinList = () => {
   // Define state variables to store the fetched data and the selected tag
   const [memeCoins, setMemeCoins] = useState([]);
   const [selectedTag, setSelectedTag] = useState('meme'); // Default tag is 'meme'
+  const [totals, setTotals] = useState({
+    total1: 0,
+    total2: 0,
+    total3: 0,
+    currentTag: 0,
+  });
 
   const fetchMemeCoins = async (tag) => {
     try {
@@ -19,11 +26,36 @@ const AltCoinList = () => {
 
       // Set the fetched data to the state
       setMemeCoins(data);
+
+      // Calculate totals based on the fetched data
+      const total1 = calculateTotal(data, 'marketCap');
+      const total2 = calculateTotal(data, 'marketCap', 'bitcoin');
+      const total3 = calculateTotal(data, 'marketCap', ['bitcoin', 'ethereum']);
+      const currentTag = calculateTotal(data, 'marketCap', selectedTag);
+      
+      // Log intermediate values
+      console.log('Intermediate Values:', { total1, total2, total3, currentTag });
+      // Set the totals to the state
+      setTotals({ total1, total2, total3, currentTag });
     } catch (error) {
       // Handle errors here
       console.error('Error fetching data:', error);
     }
   };
+
+  // const calculateTotal = (data, property, exclusionList) => {
+  //   const coins = data.data.coins;
+  //   const total = coins.reduce((acc, coin) => {
+  //     if (!exclusionList || (exclusionList && !exclusionList.includes(coin.name))) {
+  //       acc += coin[property];
+  //     }
+  //     console.lpg('accumulator', acc)
+  //     return acc;
+  //   }, 0);
+  //   console.log('Marketcap total', total)
+  //   return total;
+  // };
+  
 
   useEffect(() => {
     fetchMemeCoins(selectedTag);
@@ -38,6 +70,7 @@ const AltCoinList = () => {
   const inclCommas = (number) => {
     return number.toLocaleString('en-US', { useGrouping: true });
   };
+  console.log(totals);
 
   return (
     <>
@@ -63,16 +96,24 @@ const AltCoinList = () => {
           <option value="stablecoin">Stable Coins</option>
           {/* Add more options as needed */}
         </select>
+          
+          {/* Display totals */}
+          <div>
+            <h2>Total 1: {totals.total1 ? inclCommas(totals.total1.total1) : 'N/A'}</h2>
+            <h2>Total 2: {totals.total2 ? inclCommas(totals.total2.total2) : 'N/A'}</h2>
+            <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total3) : 'N/A'}</h2>
+            <h2>{`Total ${selectedTag}: ${totals.currentTag[selectedTag] ? inclCommas(totals.currentTag[selectedTag]) : 'N/A'}`}</h2>
+          </div>
 
         <div className={styles.grid}>
         {memeCoins.map((coin) => (
           <div key={coin.uuid} className={styles.card}>
             <img className="crypto-image" src={coin.url} width={42} height={42} />
-            <p>Name: {coin.name} </p>
-            <p>Symbol: {coin.symbol} </p>
-            <p>ID: {coin.uuid} </p>
+            <p>Name: {coin.name}</p>
+            <p>Symbol: {coin.symbol}</p>
+            <p>ID: {coin.uuid}</p>
             <p>$/USD: ${truncated(coin.price, 10)}</p>
-            <p>MarketCap: ${inclCommas(coin.marketCap)} </p>
+            <p>MarketCap: ${inclCommas(coin.marketCap)}</p>
             {/* Include other properties as needed */}
           </div>
         ))}
