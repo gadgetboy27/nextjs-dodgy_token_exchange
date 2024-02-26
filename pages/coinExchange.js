@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
-import { calculateTotal } from './api/api'; // Import the calculateTotal function
+import { calculateTotal } from './api/calculateTotal'; // Import the calculateTotal function
 
 const AltCoinList = () => {
   // Define state variables to store the fetched data and the selected tag
@@ -15,7 +15,7 @@ const AltCoinList = () => {
 
   const fetchMemeCoins = async (tag) => {
     try {
-      const response = await fetch(`/api/meme?tag=${tag}`);
+      const response = await fetch(`/api/api?tag=${tag}`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -43,20 +43,6 @@ const AltCoinList = () => {
     }
   };
 
-  // const calculateTotal = (data, property, exclusionList) => {
-  //   const coins = data.data.coins;
-  //   const total = coins.reduce((acc, coin) => {
-  //     if (!exclusionList || (exclusionList && !exclusionList.includes(coin.name))) {
-  //       acc += coin[property];
-  //     }
-  //     console.lpg('accumulator', acc)
-  //     return acc;
-  //   }, 0);
-  //   console.log('Marketcap total', total)
-  //   return total;
-  // };
-  
-
   useEffect(() => {
     fetchMemeCoins(selectedTag);
   }, [selectedTag]);
@@ -70,7 +56,6 @@ const AltCoinList = () => {
   const inclCommas = (number) => {
     return number.toLocaleString('en-US', { useGrouping: true });
   };
-  console.log(totals);
 
   return (
     <>
