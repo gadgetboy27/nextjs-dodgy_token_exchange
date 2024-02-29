@@ -31,8 +31,8 @@ const AltCoinList = () => {
       const total1 = calculateTotal(data, 'marketCap');
       const total2 = calculateTotal(data, 'marketCap', 'bitcoin');
       const total3 = calculateTotal(data, 'marketCap', ['bitcoin', 'ethereum']);
-      const currentTag = calculateTotal(data, 'marketCap', selectedTag);
-      
+      const currentTag = calculateTotal(data, 'marketCap', [selectedTag]);
+      console.log('Line 35', selectedTag);
       // Log intermediate values
       console.log('Intermediate Values:', { total1, total2, total3, currentTag });
       // Set the totals to the state
@@ -46,6 +46,8 @@ const AltCoinList = () => {
   useEffect(() => {
     fetchMemeCoins(selectedTag);
   }, [selectedTag]);
+  
+  console.log('Line 49 after useEffect', selectedTag)
 
   // Function to truncate a large number
   const truncated = (number, decimals) => {
@@ -87,7 +89,7 @@ const AltCoinList = () => {
             <h2>Total 1: {totals.total1 ? inclCommas(totals.total1.total1) : 'N/A'}</h2>
             <h2>Total 2: {totals.total2 ? inclCommas(totals.total2.total2) : 'N/A'}</h2>
             <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total3) : 'N/A'}</h2>
-            <h2>{`Total ${selectedTag}: ${totals.currentTag[selectedTag] ? inclCommas(totals.currentTag[selectedTag]) : 'N/A'}`}</h2>
+            <h2>{`Market Cap for ${selectedTag}: ${totals.currentTag[selectedTag] ? inclCommas(totals.currentTag[selectedTag]) : 'N/A'}`}</h2>
           </div>
 
         <div className={styles.grid}>
@@ -98,7 +100,7 @@ const AltCoinList = () => {
             <p>Symbol: {coin.symbol}</p>
             <p>ID: {coin.uuid}</p>
             <p>$/USD: ${truncated(coin.price, 10)}</p>
-            <p>MarketCap: ${inclCommas(coin.marketCap)}</p>
+            <p>Market Cap: ${inclCommas(coin.marketCap)}</p>
             {/* Include other properties as needed */}
           </div>
         ))}
