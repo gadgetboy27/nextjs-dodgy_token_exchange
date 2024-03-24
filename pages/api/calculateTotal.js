@@ -1,5 +1,4 @@
 export const calculateTotal = (coins, selectedTag) => {
-  console.log('Selected Tag', selectedTag);
 
   const total1 = coins.reduce((acc, coin) => acc + Number(coin.marketCap), 0);
   console.log('Total 1:', total1);
@@ -28,8 +27,6 @@ export const calculateTotal = (coins, selectedTag) => {
     }
     return acc;
   }, 0);
-
-  console.log('Current Tag:', currentTag);
 
   return {
     total1: total1.toLocaleString(),

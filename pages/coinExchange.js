@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { calculateTotal } from './api/calculateTotal'; // Import the calculateTotal function
+import { getNextState } from './api/strategies.js';
 
 const AltCoinList = () => {
   // Define state variables to store the fetched data and the selected tag
   const [memeCoins, setMemeCoins] = useState([]);
   const [selectedTag, setSelectedTag] = useState('meme'); // Default tag is 'meme'
+  const [dayVolume, setDayVolume] = useState(0);
   const [totals, setTotals] = useState({
     total1: 0,
     total2: 0,
@@ -27,10 +29,14 @@ const AltCoinList = () => {
       // Set the fetched data to the state
       setMemeCoins(data);
 
+      // Calculate dayVolume based on the fetched data
+      const getNextState = (data, '24hVolume');
+      setDayVolume(getNextState);
+
       // Calculate totals based on the fetched data
       const total1 = calculateTotal(data, 'marketCap');
-      const total2 = calculateTotal(data, 'marketCap', 'bitcoin');
-      const total3 = calculateTotal(data, 'marketCap', ['bitcoin', 'ethereum']);
+      const total2 = calculateTotal(data, 'marketCap', - 'bitcoin');
+      const total3 = calculateTotal(data, 'marketCap', - ['bitcoin', 'ethereum']);
       const currentTag = calculateTotal(data, 'marketCap', [selectedTag]);
       console.log('Line 35', selectedTag);
       // Log intermediate values
@@ -81,14 +87,14 @@ const AltCoinList = () => {
           <option value="erc-20">ERC-20 Tokens</option>
           <option value="staking">Staking Coins</option>
           <option value="stablecoin">Stable Coins</option>
-          {/* Add more options as needed */}
+           {/* Include other properties as needed */}
         </select>
           
           {/* Display totals */}
           <div>
             <h2>Total 1: {totals.total1 ? inclCommas(totals.total1.total1) : 'N/A'}</h2>
             <h2>Total 2: {totals.total2 ? inclCommas(totals.total2.total2) : 'N/A'}</h2>
-            <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total3) : 'N/A'}</h2>
+            <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total1) : 'N/A'}</h2>
             <h2>{`Market Cap for ${selectedTag}: ${totals.currentTag[selectedTag] ? inclCommas(totals.currentTag[selectedTag]) : 'N/A'}`}</h2>
           </div>
 
@@ -101,6 +107,7 @@ const AltCoinList = () => {
             <p>ID: {coin.uuid}</p>
             <p>$/USD: ${truncated(coin.price, 10)}</p>
             <p>Market Cap: ${inclCommas(coin.marketCap)}</p>
+            <p>% Vol Change: {getNextState ? inclCommas(dayVolume) : 'N/A'}</p> 
             {/* Include other properties as needed */}
           </div>
         ))}
