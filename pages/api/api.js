@@ -2,7 +2,7 @@
 
 export default async function handler(req, res) {
   try {
-    const { tag } = req.query;
+    const { tag, orderBy } = req.query;
 
     const options = {
       headers: {
@@ -10,7 +10,13 @@ export default async function handler(req, res) {
       },
     };
 
-    const response = await fetch(`https://api.coinranking.com/v2/coins?tags[]=${tag}`, options);
+    // Construct the API endpoint URL with the specified tag and orderBy parameters
+    let apiUrl = `https://api.coinranking.com/v2/coins?tags[]=${tag}`;
+    if (orderBy) {
+      apiUrl += `&orderBy=${orderBy}`;
+    }
+
+    const response = await fetch(apiUrl, options);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -26,6 +32,8 @@ export default async function handler(req, res) {
       url: coin.iconUrl,
       marketCap: coin.marketCap,
       price: coin.price,
+      volume24h: coin['24hVolume'],
+      change: coin.change,
       // Include other properties as needed
     }));
     console.log('Coin data', coinsData)

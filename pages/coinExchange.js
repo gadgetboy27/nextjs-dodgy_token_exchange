@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { calculateTotal } from './api/calculateTotal'; // Import the calculateTotal function
-import { getNextState } from './api/strategies.js';
+import { fetchMemeCoinsWithTimePeriod } from './fetchMemeCoins';
 
 const AltCoinList = () => {
   // Define state variables to store the fetched data and the selected tag
   const [memeCoins, setMemeCoins] = useState([]);
-  const [selectedTag, setSelectedTag] = useState('meme'); // Default tag is 'meme'
-  const [dayVolume, setDayVolume] = useState(0);
+  const [selectedTag, setSelectedTag] = useState('meme');
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState('24h');
   const [totals, setTotals] = useState({
     total1: 0,
     total2: 0,
@@ -15,45 +15,57 @@ const AltCoinList = () => {
     currentTag: 0,
   });
 
-  const fetchMemeCoins = async (tag) => {
-    try {
-      const response = await fetch(`/api/api?tag=${tag}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      // Log or process the data as needed
-      console.log('Fetched Data:', data);
-
-      // Set the fetched data to the state
-      setMemeCoins(data);
-
-      // Calculate dayVolume based on the fetched data
-      const getNextState = (data, '24hVolume');
-      setDayVolume(getNextState);
-
-      // Calculate totals based on the fetched data
-      const total1 = calculateTotal(data, 'marketCap');
-      const total2 = calculateTotal(data, 'marketCap', - 'bitcoin');
-      const total3 = calculateTotal(data, 'marketCap', - ['bitcoin', 'ethereum']);
-      const currentTag = calculateTotal(data, 'marketCap', [selectedTag]);
-      console.log('Line 35', selectedTag);
-      // Log intermediate values
-      console.log('Intermediate Values:', { total1, total2, total3, currentTag });
-      // Set the totals to the state
-      setTotals({ total1, total2, total3, currentTag });
-    } catch (error) {
-      // Handle errors here
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
+    const fetchMemeCoins = async (tag) => {
+      try {
+        const response = await fetch(`/api/api?tag=${tag}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Set the fetched data to the state
+        setMemeCoins(data);
+
+        // Calculate totals based on the fetched data
+        const total1 = calculateTotal(data, 'marketCap');
+        const total2 = calculateTotal(data, 'marketCap', - 'bitcoin');
+        const total3 = calculateTotal(data, 'marketCap', - ['bitcoin', 'ethereum']);
+        const currentTag = calculateTotal(data, 'marketCap', [selectedTag]);
+        
+        // Log intermediate values
+        console.log('Intermediate Values:', { total1, total2, total3, currentTag });
+
+        // Set the totals to the state
+        setTotals({ total1, total2, total3, currentTag });
+      } catch (error) {
+        // Handle errors here
+        console.error('Error fetching data:', error);
+      }
+    };
+
     fetchMemeCoins(selectedTag);
   }, [selectedTag]);
-  
-  console.log('Line 49 after useEffect', selectedTag)
+
+    // Function to handle time period change
+    const handleTimePeriodChange = (event) => {
+      setSelectedTimePeriod(event.target.value);
+    };
+
+    // Function to fetch meme coins data with the selected time period
+    const fetchMemeCoinsDataWithTimePeriod = async (selectedTag, selectedTimePeriod) => {
+      try {
+        const data = await fetchMemeCoinsWithTimePeriod(selectedTag, selectedTimePeriod);
+        setMemeCoins(data);
+      } catch (error) {
+        // Handle errors here
+        console.error('Error fetching meme coins data:', error);
+      }
+    };
+
+    // useEffect hook to fetch meme coins data when selected tag or time period changes
+    useEffect(() => {
+      fetchMemeCoinsDataWithTimePeriod(selectedTag, selectedTimePeriod);
+    }, [selectedTag, selectedTimePeriod]);
 
   // Function to truncate a large number
   const truncated = (number, decimals) => {
@@ -64,6 +76,7 @@ const AltCoinList = () => {
   const inclCommas = (number) => {
     return number.toLocaleString('en-US', { useGrouping: true });
   };
+  console.log(inclCommas(123456789));
 
   return (
     <>
@@ -89,12 +102,18 @@ const AltCoinList = () => {
           <option value="stablecoin">Stable Coins</option>
            {/* Include other properties as needed */}
         </select>
-          
+        <select value={selectedTimePeriod} onChange={handleTimePeriodChange}>
+          <option value="1h">1 Hour</option>
+          <option value="3h">3 Hours</option>
+          <option value="12h">12 Hours</option>
+          <option value="24h">24 Hours</option>
+          {/* Add other time periods as needed */}
+        </select>
           {/* Display totals */}
           <div>
             <h2>Total 1: {totals.total1 ? inclCommas(totals.total1.total1) : 'N/A'}</h2>
             <h2>Total 2: {totals.total2 ? inclCommas(totals.total2.total2) : 'N/A'}</h2>
-            <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total1) : 'N/A'}</h2>
+            <h2>Total 3: {totals.total3 ? inclCommas(totals.total3.total3) : 'N/A'}</h2>
             <h2>{`Market Cap for ${selectedTag}: ${totals.currentTag[selectedTag] ? inclCommas(totals.currentTag[selectedTag]) : 'N/A'}`}</h2>
           </div>
 
@@ -105,9 +124,11 @@ const AltCoinList = () => {
             <p>Name: {coin.name}</p>
             <p>Symbol: {coin.symbol}</p>
             <p>ID: {coin.uuid}</p>
-            <p>$/USD: ${truncated(coin.price, 10)}</p>
+            <p>$USD: ${truncated(coin.price, 10)}</p>
             <p>Market Cap: ${inclCommas(coin.marketCap)}</p>
-            <p>% Vol Change: {getNextState ? inclCommas(dayVolume) : 'N/A'}</p> 
+            <p>Vol: {coin.volume24h ? inclCommas(coin.volume24h) : 'N/A'}</p>
+            <p>Change ({selectedTimePeriod}): {coin.change[selectedTimePeriod]}%</p>
+            <p>Listed: {coin.listedAt}</p>
             {/* Include other properties as needed */}
           </div>
         ))}
